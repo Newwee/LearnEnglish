@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENG Academy — CEFR English Learning Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=mobile-20260608-2">
+</head>
+<body>
+    <div class="bg-canvas">
+        <div class="orb orb-blue"></div>
+        <div class="orb orb-purple"></div>
+        <div class="orb orb-teal"></div>
+    </div>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <div class="logo">
+                <div class="logo-mark">E</div>
+                <span class="logo-name">ENG<b>Academy</b></span>
+            </div>
+            <nav class="main-nav">
+                <button class="nav-item active" onclick="switchTab('lessons',this)"><i>📚</i> คลังบทเรียน</button>
+                <button class="nav-item" onclick="switchTab('quiz-hub',this)"><i>✏️</i> แบบทดสอบ</button>
+                <button class="nav-item" onclick="switchTab('dashboard',this)"><i>📊</i> Dashboard</button>
+            </nav>
+            <div class="header-right">
+                <div class="coin-badge" id="header-coins">🪙 0</div>
+                <div class="level-badge" id="header-level">CEFR: --</div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- ===================== LESSONS TAB ===================== -->
+        <div id="lessons" class="tab-page active">
+            <div class="hero">
+                <div class="hero-label">🎓 CEFR A1 → C2 · ครบ 5 ทักษะหลัก</div>
+                <h1>เรียนอังกฤษ<br><span class="gradient-text">อย่างเป็นระบบ</span></h1>
+                <p class="hero-sub">35+ บทเรียนเชิงลึก · ครอบคลุมทุกระดับ · ข้อสอบมาตรฐานสากล · มีระบบ Coin ช่วยดึงไฟเรียน</p>
+            </div>
+            <div class="card-grid" id="lesson-category-grid"></div>
+
+            <div id="lesson-overlay" class="lesson-overlay hidden">
+                <div class="overlay-backdrop" onclick="closeLesson()"></div>
+                <div class="overlay-panel">
+                    <div class="overlay-top">
+                        <div>
+                            <div class="overlay-badge" id="overlay-badge">Grammar</div>
+                            <h2 id="overlay-title">บทเรียน</h2>
+                        </div>
+                        <button class="icon-btn" onclick="closeLesson()">✕</button>
+                    </div>
+                    <div id="unit-list" class="unit-list"></div>
+                    <div id="lesson-viewer" class="lesson-viewer hidden">
+                        <button class="back-link" onclick="backToUnits()">← กลับรายการ</button>
+                        <div id="lesson-content-area"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== QUIZ TAB ===================== -->
+        <div id="quiz-hub" class="tab-page">
+            <div id="quiz-selector-view">
+                <div class="hero">
+                    <div class="hero-label">🎯 Diagnostic Test · CEFR Standard</div>
+                    <h1>เลือกหมวด<br><span class="gradient-text">แบบทดสอบ</span></h1>
+                    <p class="hero-sub">สุ่ม 10 ข้อจากคลังหลายระดับ · วิเคราะห์จุดอ่อนแยกพาร์ท · ทำดี ทำไว ได้ Coin Bonus</p>
+                </div>
+                <div class="card-grid" id="quiz-category-grid"></div>
+            </div>
+
+            <div id="quiz-active-view" class="hidden">
+                <div class="quiz-topbar">
+                    <button class="back-link" onclick="exitQuiz()">← ออก</button>
+                    <div class="quiz-meta">
+                        <span class="pill" id="quiz-cat-label">Grammar</span>
+                        <span id="quiz-prog-text" class="prog-text">1 / 10</span>
+                    </div>
+                    <div class="quiz-clock" id="quiz-clock">00:00</div>
+                </div>
+                <div class="quiz-prog-bar"><div id="quiz-fill" style="width:0%"></div></div>
+
+                <div class="question-card" id="question-card">
+                    <div class="q-meta">
+                        <span class="q-level" id="q-level-tag">B1</span>
+                        <span class="q-type" id="q-type-tag">Grammar</span>
+                    </div>
+                    <p class="q-text" id="q-text">กำลังโหลด...</p>
+                    <div class="q-options" id="q-options"></div>
+                </div>
+                <div class="quiz-actions">
+                    <div class="explain-box hidden" id="explain-box">
+                        <span class="explain-icon" id="explain-icon">✅</span>
+                        <p id="explain-text"></p>
+                    </div>
+                    <button class="btn-primary disabled" id="next-q-btn" onclick="nextQuestion()" disabled>ถัดไป →</button>
+                </div>
+            </div>
+
+            <div id="quiz-result-view" class="hidden">
+                <div class="result-hero">
+                    <span class="result-icon-big" id="result-icon-big">🎯</span>
+                    <h2 id="result-heading">ผลการทดสอบ</h2>
+                    <div class="score-ring-wrap">
+                        <svg class="score-ring" viewBox="0 0 140 140">
+                            <circle cx="70" cy="70" r="58" fill="none" stroke="rgba(56,189,248,0.08)" stroke-width="10"/>
+                            <circle id="ring-arc" cx="70" cy="70" r="58" fill="none" stroke="#38bdf8" stroke-width="10"
+                                stroke-dasharray="364.4" stroke-dashoffset="364.4"
+                                stroke-linecap="round" transform="rotate(-90 70 70)"/>
+                        </svg>
+                        <div class="ring-inner">
+                            <span id="ring-num">0</span>
+                            <small id="ring-den">/10</small>
+                        </div>
+                    </div>
+                    <div class="cefr-tag" id="result-cefr">ระดับ: --</div>
+                    <div class="reward-card" id="result-reward-card">
+                        <div class="reward-card-top">
+                            <span>🪙</span>
+                            <div>
+                                <div class="reward-title">รางวัลรอบนี้</div>
+                                <div class="reward-sub" id="reward-summary">กำลังคำนวณ...</div>
+                            </div>
+                            <strong id="reward-total">+0</strong>
+                        </div>
+                        <div class="reward-breakdown" id="reward-breakdown"></div>
+                    </div>
+                </div>
+                <div class="result-body">
+                    <h3>📋 วิเคราะห์รายข้อ</h3>
+                    <div id="answers-breakdown" class="answers-breakdown"></div>
+                    <div class="ai-advice-card">
+                        <div class="ai-advice-header"><span>🤖</span><h3>AI วิเคราะห์และแนะนำ</h3></div>
+                        <p id="ai-advice-text"></p>
+                    </div>
+                    <div class="result-btns">
+                        <button class="btn-outline" onclick="exitQuiz()">← หมวดอื่น</button>
+                        <button class="btn-primary" onclick="retryCurrentQuiz()">ทำซ้ำ 🔄</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== DASHBOARD TAB ===================== -->
+        <div id="dashboard" class="tab-page">
+            <div class="hero">
+                <div class="hero-label">📊 ติดตามความก้าวหน้า</div>
+                <h1>Progress<br><span class="gradient-text">Dashboard</span></h1>
+            </div>
+            <div class="stats-row">
+                <div class="stat-box"><div class="stat-num" id="ds-total">0</div><div class="stat-lbl">ครั้งที่ทำแบบทดสอบ</div></div>
+                <div class="stat-box"><div class="stat-num" id="ds-avg">--%</div><div class="stat-lbl">คะแนนเฉลี่ย</div></div>
+                <div class="stat-box reward-stat"><div class="stat-num" id="ds-coins">0</div><div class="stat-lbl">Coins สะสม</div></div>
+                <div class="stat-box reward-stat"><div class="stat-num" id="ds-streak">0</div><div class="stat-lbl">Daily Streak</div></div>
+                <div class="stat-box"><div class="stat-num" id="ds-best">--</div><div class="stat-lbl">ทักษะที่เก่งที่สุด</div></div>
+                <div class="stat-box"><div class="stat-num" id="ds-cefr">--</div><div class="stat-lbl">ระดับ CEFR โดยรวม</div></div>
+            </div>
+            <div class="dashboard-card reward-center">
+                <div class="history-header">
+                    <h3 class="section-title" style="margin-bottom:0">🪙 Reward Center</h3>
+                    <span class="reward-rank" id="ds-rank">Rookie Learner</span>
+                </div>
+                <div class="reward-missions" id="reward-missions"></div>
+            </div>
+            <div class="dashboard-card">
+                <h3 class="section-title">🎯 ความแม่นยำแยกทักษะ</h3>
+                <div id="skill-bars-container"></div>
+            </div>
+            <div class="dashboard-card">
+                <div class="history-header">
+                    <h3 class="section-title" style="margin-bottom:0">🕐 ประวัติการทำแบบทดสอบ</h3>
+                    <button class="btn-danger-sm" onclick="clearHistory()">ล้างข้อมูล</button>
+                </div>
+                <div id="history-container"><div class="empty-msg">ยังไม่มีข้อมูล — ไปทำแบบทดสอบก่อนนะครับ! 🚀</div></div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

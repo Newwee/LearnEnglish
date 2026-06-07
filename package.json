@@ -1,0 +1,12 @@
+{
+  "name": "eng-academy-cefr",
+  "version": "1.0.0",
+  "description": "CEFR English learning platform with quizzes and rewards.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
